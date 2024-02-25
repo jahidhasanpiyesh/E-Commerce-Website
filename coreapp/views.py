@@ -7,10 +7,10 @@ def home(request):
     return render(request, 'home/home.html')
 
 def user_login(request): 
-    # if request.method == 'POST':
-    #     fm = user_login(request=POST)
+    
     return render(request, 'home/user_login.html')
 
+# Register Base Function
 def user_register(request):
     if request.method == 'POST':
         username= request.POST['username']
@@ -22,17 +22,19 @@ def user_register(request):
         # chack in password1 or password2 similar 
         if password == con_password:
             if User.objects.filter(username=username).exists():
-                messages.error(request, 'Username is already taken.')
+                messages.error(request, 'Oops! Username is already taken. Please choose another one.')
                 return redirect(user_register)
-            
-            elif User.objects.filter(email=email):
-                messages.error(request, 'Email is already taken.')
+            if User.objects.filter(email=email):
+                messages.error(request, 'Oops! Email is already registered. Please use a different email.')
                 return redirect(user_register)
                   
-            else:
+            # Field is not Empty 
+            if username and email and password and con_password:
                 user_info=User.objects.create_user(username=username, email=email, first_name=first_name, password=password)
                 user_info.save()
-                messages.success(request, 'Your Account Created Successfully !')
+                messages.success(request, 'Great job! Your account has been created successfully!')
+            else:
+                messages.success(request, 'Oops! Please make sure to fill out all the required fields.')                 
         else:
-            messages.error(request, 'Pssword Not Match !!')
+            messages.error(request, 'Oops! Passwords do not match. Please check and try again.')
     return render(request, 'home/user_register.html')
