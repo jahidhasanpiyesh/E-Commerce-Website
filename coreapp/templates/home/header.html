@@ -39,7 +39,7 @@
                             {% if request.user.is_authenticated %}
                             <a href="{% url 'user_logout' %}"><i class="fa fa-user"></i> Logout</a>
                             {% else %}
-                            <a href="{% url 'user_login' %}"><i class="fa fa-user"></i> Login</a>                    
+                            <a href="{% url 'user_login' %}"><i class="fa fa-user"></i> Account</a>                    
                             {% endif %}
 
                         </div>
@@ -76,10 +76,14 @@
             <div class="col-lg-3">
                 <div class="header__cart">
                     <ul>
+                        {% if request.user.is_authenticated %}
                         <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                        {% endif %}
                         <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
                     </ul>
+                    {% if request.user.is_authenticated %}
                     <div class="header__cart__price">item: <span>$150.00</span></div>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 # Create your views here.
 
@@ -8,20 +9,26 @@ def home(request):
     return render(request, 'home/home.html')
 
 def user_login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']           
-        user_name = authenticate(username=username)
-        user_pass = authenticate(password=password)
-        if user_name is None:
-            messages.error(request, 'User Not Found')
-            return redirect(user_login)
-        else:
-            login(request,user_name)
-            return redirect(home)
-        
-        
-    return render(request, 'home/user_login.html')
+    if not request.user.is_authenticated:
+        if request.method == 'POST':
+            username = request.POST['username']
+            password = request.POST['password']
+            try:
+                check_username = User.objects.get(username=username)
+                if check_username:
+                    user = authenticate(request, username=username, password=password)
+                    if user is not None:
+                        login(request, user)
+                        return redirect(home)
+                    else:
+                        messages.error(request, 'Oops! Passwords do not match. Please check and try again.')
+            
+            except ObjectDoesNotExist:
+                messages.error(request, 'User not found. Please provide valid credentials for login.')
+        return render(request, 'home/user_login.html')
+    else:
+        return redirect(home)
+
     
 # Register Base Function
 def user_register(request):
