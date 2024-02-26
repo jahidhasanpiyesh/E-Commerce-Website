@@ -31,7 +31,7 @@ def user_login(request):
 
     
 # Register Base Function
-def user_register(request):
+def customer_register(request):
     if request.method == 'POST':
         username= request.POST['username']
         first_name = request.POST['first_name']
@@ -52,7 +52,7 @@ def user_register(request):
                 messages.success(request, 'Oops! Please make sure to fill out all the required fields.')                 
         else:
             messages.error(request, 'Oops! Passwords do not match. Please check and try again.')
-    return render(request, 'home/user_register.html')
+    return render(request, 'home/customer_register.html')
 
 def user_logout(request):
     logout(request)
