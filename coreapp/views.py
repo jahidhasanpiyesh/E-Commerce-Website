@@ -42,7 +42,7 @@ def customer_register(request):
         if password == con_password:
             if User.objects.filter(username=username).exists():
                 messages.error(request, 'Oops! Username is already taken. Please choose another one.')
-                return redirect(user_register)              
+                return redirect(customer_register)              
             # Field is not Empty
             if username and email and password and con_password:
                 user_info=User.objects.create_user(username=username, email=email, first_name=first_name, password=password)
@@ -53,6 +53,29 @@ def customer_register(request):
         else:
             messages.error(request, 'Oops! Passwords do not match. Please check and try again.')
     return render(request, 'home/customer_register.html')
+
+def seller_register(request):
+    if request.method == 'POST':
+        first_name = request.POST['first_name']
+        email = request.POST['email']
+        nid = request.POST['nid']
+        password = request.POST['password']
+        con_password = request.POST['con_password'] 
+        # chack in password1 or password2 similar 
+        if password == con_password:
+            if User.objects.filter(nid=nid).exists():
+                messages.error(request, 'Oops! Username is already taken. Please choose another one.')
+                return redirect(customer_register)              
+            # Field is not Empty
+            if nid and email and password and con_password:
+                user_info=User.objects.create_user(username=nid, email=email, first_name=first_name, password=password)
+                user_info.save()
+                messages.success(request, 'Great job! Your account has been created successfully!')
+            else:
+                messages.success(request, 'Oops! Please make sure to fill out all the required fields.')                 
+        else:
+            messages.error(request, 'Oops! Passwords do not match. Please check and try again.')
+    return render(request, 'home/seller_register.html')
 
 def user_logout(request):
     logout(request)
